@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.models import User, Location, Visit
-from api.serializers import UserSerializer, LocationSerializer, VisitSerializer
+from api.serializers import RegisterUserSerializer, UserSerializer, LocationSerializer, VisitSerializer
 
 
 class UserRegister(APIView):
@@ -11,7 +11,7 @@ class UserRegister(APIView):
     """
 
     def post(self, request, format=None):
-        serializer = UserSerializer(data=request.date)
+        serializer = RegisterUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
