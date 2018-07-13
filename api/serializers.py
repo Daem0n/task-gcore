@@ -53,12 +53,11 @@ class VisitSerializer(serializers.ModelSerializer):
 class LocationRatioSerializer(serializers.ModelSerializer):
     count = serializers.SerializerMethodField()
     avg = serializers.SerializerMethodField()
-    visitors = UserSerializer(many=True, read_only=True)
+    visitors = VisitSerializer(many=True, read_only=True, source='visit_set')
 
     class Meta:
         model = Location
         fields = ('count', 'avg', 'visitors')
-        depth = 1
 
     def get_count(self, obj):
         count = obj.visit_set.count()
@@ -81,7 +80,6 @@ class UserRatioSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('count', 'avg', 'locations')
-        depth = 1
 
     def get_count(self, obj):
         count = obj.visit_set.count()
