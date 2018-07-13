@@ -1,8 +1,10 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import permissions
 from api.models import User, Location, Visit
 from api.serializers import RegisterUserSerializer, UserSerializer, LocationSerializer, VisitSerializer
+from api.permissions import IsOwnerOrReadOnly
 
 
 class UserRegister(APIView):
@@ -35,6 +37,7 @@ class UserList(generics.ListAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -43,6 +46,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
 
 
 class LocationList(generics.ListCreateAPIView):
@@ -51,6 +55,7 @@ class LocationList(generics.ListCreateAPIView):
     """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -59,6 +64,7 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class LocationVisit(generics.GenericAPIView):
@@ -67,6 +73,7 @@ class LocationVisit(generics.GenericAPIView):
     """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, format=None):
         location = self.get_object()
@@ -99,6 +106,7 @@ class VisitDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Visit.objects.all()
     serializer_class = VisitSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
 
 class UserRatio(generics.GenericAPIView):
@@ -107,3 +115,7 @@ class UserRatio(generics.GenericAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        return Response()
