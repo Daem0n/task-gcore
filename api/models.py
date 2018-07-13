@@ -22,6 +22,9 @@ class Location(models.Model):
     visitors = models.ManyToManyField(User, through='Visit')
 
 
+# User.locations = models.ManyToManyField(Location, through='Visit')
+
+
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)

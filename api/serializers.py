@@ -71,3 +71,26 @@ class LocationRatioSerializer(serializers.ModelSerializer):
         if average is None:
             return 0
         return average
+
+
+class UserRatioSerializer(serializers.ModelSerializer):
+    count = serializers.SerializerMethodField()
+    avg = serializers.SerializerMethodField()
+    locations = VisitSerializer(many=True, read_only=True, source='visit_set')
+
+    class Meta:
+        model = UserModel
+        fields = ('count', 'avg', 'locations')
+        depth = 1
+
+    def get_count(self, obj):
+        count = obj.visit_set.count()
+        if count is None:
+            return 0
+        return count
+
+    def get_avg(self, obj):
+        average = obj.visit_set.aggregate(Avg('ratio')).get('ratio__avg')
+        if average is None:
+            return 0
+        return average

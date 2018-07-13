@@ -7,7 +7,8 @@ from api.serializers import RegisterUserSerializer, \
     UserSerializer, \
     LocationSerializer, \
     LocationRatioSerializer, \
-    VisitSerializer
+    VisitSerializer, \
+    UserRatioSerializer
 from api.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 
 
@@ -108,13 +109,9 @@ class VisitDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
 
-class UserRatio(generics.GenericAPIView):
+class UserRatio(generics.RetrieveAPIView):
     """
     Get information user visits
     """
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def get(self, request, *args, **kwargs):
-        user = self.get_object()
-        return Response()
+    serializer_class = UserRatioSerializer
