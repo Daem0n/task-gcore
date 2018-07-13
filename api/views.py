@@ -8,7 +8,7 @@ from api.serializers import RegisterUserSerializer, \
     LocationSerializer, \
     LocationRatioSerializer, \
     VisitSerializer
-from api.permissions import IsOwnerOrReadOnly
+from api.permissions import IsOwnerOrReadOnly, IsSelfOrReadOnly
 
 
 class UserRegister(APIView):
@@ -50,7 +50,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, )
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsSelfOrReadOnly,)
 
 
 class LocationList(generics.ListCreateAPIView):
