@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.db.models import Avg
 from api.models import Location, Visit
 
 UserModel = get_user_model()
@@ -40,16 +41,33 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'country', 'city', 'name', 'description')
 
 
-class LocationVisitSerializer(serializers.ModelSerializer):
+class VisitSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     location = serializers.ReadOnlyField(source='location.name')
 
     class Meta:
         model = Visit
-        fields = ('id', 'location', 'user', 'date', 'ratio')
+        fields = ('id', 'user_id', 'user', 'location_id', 'location', 'date', 'ratio')
 
 
-class VisitSerializer(serializers.ModelSerializer):
+class LocationRatioSerializer(serializers.ModelSerializer):
+    count = serializers.SerializerMethodField()
+    avg = serializers.SerializerMethodField()
+    visitors = UserSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Visit
-        fields = ('id', 'user_id', 'location_id', 'date', 'ratio')
+        model = Location
+        fields = ('count', 'avg', 'visitors')
+        depth = 1
+
+    def get_count(self, obj):
+        count = obj.visit_set.count()
+        if count is None:
+            return 0
+        return count
+
+    def get_avg(self, obj):
+        average = obj.visit_set.aggregate(Avg('ratio')).get('ratio__avg')
+        if average is None:
+            return 0
+        return average

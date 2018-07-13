@@ -19,6 +19,7 @@ class Location(models.Model):
     city = models.CharField(max_length=256)
     name = models.CharField(max_length=256)
     description = models.TextField()
+    visitors = models.ManyToManyField(User, through='Visit')
 
 
 class Visit(models.Model):

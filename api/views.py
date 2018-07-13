@@ -6,7 +6,7 @@ from api.models import User, Location, Visit
 from api.serializers import RegisterUserSerializer, \
     UserSerializer, \
     LocationSerializer, \
-    LocationVisitSerializer, \
+    LocationRatioSerializer, \
     VisitSerializer
 from api.permissions import IsOwnerOrReadOnly
 
@@ -76,23 +76,19 @@ class LocationVisit(generics.CreateAPIView):
     Visit location
     """
     queryset = Location.objects.all()
-    serializer_class = LocationVisitSerializer
+    serializer_class = VisitSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, location=self.get_object())
 
 
-class LocationRatio(generics.GenericAPIView):
+class LocationRatio(generics.RetrieveAPIView):
     """
     Get ratio for location
     """
     queryset = Location.objects.all()
-    serializer_class = LocationSerializer
-
-    def get(self, request, format=None):
-        location = self.get_object()
-        return Response()
+    serializer_class = LocationRatioSerializer
 
 
 class VisitList(generics.ListAPIView):
