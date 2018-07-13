@@ -12,14 +12,12 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'password')
 
-
-class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = UserModel.objects.create(
             username=validated_data.get('username'),
             email=validated_data.get('email'),
-            first_name=validated_data.get('first_name'),
-            last_name=validated_data.get('last_name'),
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
             gender=validated_data.get('gender'),
             birth_date=validated_data.get('birth_date'),
             country=validated_data.get('country'),
@@ -27,6 +25,9 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data.get('password'))
         user.save()
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
