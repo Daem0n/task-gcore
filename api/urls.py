@@ -1,10 +1,11 @@
 from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     url(r'^register/$', views.UserRegister.as_view()),
-    url(r'^sign_in/$', views.UserSignIn.as_view()),
+    url(r'^sign_in/$', obtain_jwt_token),
     url(r'^users/$', views.UserList.as_view()),
     url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
     url(r'^locations/$', views.LocationList.as_view()),
