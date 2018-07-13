@@ -11,14 +11,14 @@ GENDER_CHOICES = (
 class User(AbstractUser):
     gender = models.CharField(max_length=1, null=True, choices=GENDER_CHOICES)
     birth_date = models.DateField(null=True)
-    country = models.CharField(null=True)
+    country = models.CharField(max_length=256, null=True)
 
 
 class Location(models.Model):
-    country = models.CharField()
-    city = models.CharField()
-    name = models.CharField()
-    description = models.CharField()
+    country = models.CharField(max_length=256)
+    city = models.CharField(max_length=256)
+    name = models.CharField(max_length=256)
+    description = models.TextField()
 
 
 class Visit(models.Model):
