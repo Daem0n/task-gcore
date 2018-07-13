@@ -24,5 +24,5 @@ class Location(models.Model):
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    date = models.DateTimeField()
+    date = models.DateTimeField(auto_now=True)
     ratio = models.SmallIntegerField(validators=(MinValueValidator(0), MaxValueValidator(10)))

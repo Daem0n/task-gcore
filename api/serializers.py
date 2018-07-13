@@ -40,6 +40,15 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'country', 'city', 'name', 'description')
 
 
+class LocationVisitSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    location = serializers.ReadOnlyField(source='location.name')
+
+    class Meta:
+        model = Visit
+        fields = ('id', 'location', 'user', 'date', 'ratio')
+
+
 class VisitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visit

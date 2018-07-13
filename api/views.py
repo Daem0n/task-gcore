@@ -3,7 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
 from api.models import User, Location, Visit
-from api.serializers import RegisterUserSerializer, UserSerializer, LocationSerializer, VisitSerializer
+from api.serializers import RegisterUserSerializer, \
+    UserSerializer, \
+    LocationSerializer, \
+    LocationVisitSerializer, \
+    VisitSerializer
 from api.permissions import IsOwnerOrReadOnly
 
 
@@ -67,17 +71,16 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
-class LocationVisit(generics.GenericAPIView):
+class LocationVisit(generics.CreateAPIView):
     """
     Visit location
     """
     queryset = Location.objects.all()
-    serializer_class = LocationSerializer
+    serializer_class = LocationVisitSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def post(self, request, format=None):
-        location = self.get_object()
-        return Response()
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, location=self.get_object())
 
 
 class LocationRatio(generics.GenericAPIView):
